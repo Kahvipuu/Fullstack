@@ -1,0 +1,11 @@
+title Tehtävä 5, SPA
+
+Selain->Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+Palvelin->Selain: HTML koodi
+Selain->Palvelin: HTTP GET /main.css
+Palvelin->Selain: main.css
+Selain->Palvelin: HTTP GET /spa.js
+Palvelin->Selain: spa.js
+note left of Selain: suorittaa .js koodia joka tarvitsee .json tietoa
+Selain->Palvelin: HTTP GET /data.json
+Palvelin->Selain: data.json

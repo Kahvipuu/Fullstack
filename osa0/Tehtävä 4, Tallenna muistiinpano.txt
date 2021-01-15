@@ -1,0 +1,8 @@
+title Tehtävä 4, Tallenna muistiinpano
+
+Selain->Palvelin: HTTP POST /new_note 
+note right of Palvelin: tallentaa muistiinpanon
+Palvelin->Selain: Redirect vastaus polkuun /notes
+Selain->Palvelin: HTTP GET /notes
+Palvelin->Selain: HTML koodi
+Selain->Palvelin: muut kyselyt (.css, .js ym.) kuten materiaalissa

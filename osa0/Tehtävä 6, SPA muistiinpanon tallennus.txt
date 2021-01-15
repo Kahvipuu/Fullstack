@@ -1,0 +1,7 @@
+title Tehtävä 6, SPA muistiinpanon tallennus
+
+note left of Selain: tallentaa muistiinpanon listalle
+note left of Selain: piirtää sivun uudestaan
+Selain->Palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+note right of Palvelin: tallentaa muistiinpanon
+
