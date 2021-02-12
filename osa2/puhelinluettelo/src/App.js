@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import personService from './services/persons'
+import './index.css'
 
 const Filter = (props) => {
   console.log('filter:', props.nameFilter, 'handler', props.handleFilterChange)
@@ -55,6 +56,25 @@ const ShowNumbers = (props) => {
   )
 }
 
+const Notification = ({ message, success }) => {
+  if (message === null) {
+    return null
+  }
+  if (success) {
+    return (
+      <div className='success'>
+        {message}
+      </div>
+    )
+  } else {
+    return (
+      <div className='error'>
+        {message}
+      </div>
+    )
+  }
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     /*    { name: 'Arto Hellas', number: '0401231244', id: 1 },
@@ -66,6 +86,8 @@ const App = () => {
   const [newName, setNewName] = useState('add new name')
   const [newNumber, setNewNumber] = useState('add new Number')
   const [nameFilter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState('testi')
+  const [success, setSuccess] = useState(true)
 
   useEffect(() => {
     personService
@@ -111,13 +133,35 @@ const App = () => {
         personService
           .update(idToChange, changedPerson)
           .then(response => {
+            setSuccess(true)
+            setErrorMessage(`Number for ${newName} replaced`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 3000
+            )
             setPersons(persons.map(p => p.id !== idToChange ? p : response.data))
           })
+          .catch( () => {
+            setSuccess(false)
+            setErrorMessage(`Information has been deleted from the server, can't update ${newName}`)
+            setPersons(persons.filter(p => (p.id !== idToChange) ))
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 3000
+            )
+          }
+          )
       }
     } else {
       personService
         .create(newObject)
         .then(response => {
+          setSuccess(true)
+          setErrorMessage(`Added number for ${newName}`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 3000
+          )
           setPersons(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
@@ -130,12 +174,19 @@ const App = () => {
     if (window.confirm(`Remove ${person.name}`)) {
       personService
         .remove(person.id)
-        .then(
+        .then(() => {
+          setSuccess(true)
+          setErrorMessage(`Removed ${person.name}`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 3000
+          )
           setPersons(
             persons.filter(personOld =>
               (personOld.id !== person.id)
             )
           )
+        }
         )
     }
     /*   tää ei oikein toiminu, ehkä promise ongelma... 
@@ -173,6 +224,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={errorMessage} success={success} />
       <h2>Phonebook</h2>
       <Filter nameFilter={nameFilter} handleFilterChange={handleFilterChange} />
       <h2>add a new number</h2>
