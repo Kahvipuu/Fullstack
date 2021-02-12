@@ -71,7 +71,7 @@ const App = () => {
     personService
       .getAll()
       .then(response => {
-        console.log('1.datahaku',response.data);
+        console.log('1.datahaku', response.data);
         setPersons(response.data)
       })
   }, [])
@@ -115,7 +115,11 @@ const App = () => {
       personService
         .remove(person.id)
         .then(
-         
+          setPersons(
+            persons.filter(personOld =>
+              (personOld.id !== person.id)
+            )
+          )
         )
     }
     /*    setPersons(personService
