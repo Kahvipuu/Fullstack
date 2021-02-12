@@ -89,6 +89,13 @@ const App = () => {
     return inBook
   }
 
+  const getIdForName = (findName) => {
+    const p = persons.find(person =>
+      person.name === findName
+    )
+    return p.id
+  }
+
   const addName = (event) => {
     event.preventDefault()
     const newObject = {
@@ -97,7 +104,16 @@ const App = () => {
     }
 
     if (allreadyInBook()) {
-      alert(`${newName} is already in the phonebook`)
+      if (window.confirm(`${newObject.newName} is already in the phonebook, 
+      do you wish to replace the old number?`)) {
+        const idToChange = getIdForName(newName)
+        const changedPerson = { ...(persons.find(n => n.name === newName)), number: newNumber }
+        personService
+          .update(idToChange, changedPerson)
+          .then(response => {
+            setPersons(persons.map(p => p.id !== idToChange ? p : response.data))
+          })
+      }
     } else {
       personService
         .create(newObject)
@@ -122,7 +138,9 @@ const App = () => {
           )
         )
     }
-    /*    setPersons(personService
+    /*   tää ei oikein toiminu, ehkä promise ongelma... 
+    oli vielä "pending" kun kaatui .map ei ole funkkari virheeseen 
+    setPersons(personService
           .getAll()
           .then(response => { setPersons(response.data) })
         ) */
