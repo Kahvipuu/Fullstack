@@ -1,0 +1,11 @@
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+
+{
+"title": "Topohanta",
+"author": "Gösta Knutsson",
+"url": "https://www.gummerus.fi/fi/kirja/9789512072309/pekka-topohanta/",
+"likes": 0
+}
+
+
