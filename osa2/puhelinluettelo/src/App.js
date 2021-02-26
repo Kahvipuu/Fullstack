@@ -102,8 +102,7 @@ const App = () => {
     let inBook = false
     persons.map(person => {
       // ja tästä toivottavasti muistamme miten funktiota kutsutaan.......
-      console.log('Nimi:', person.name, 'newname', newName)
-      console.log('ehto:', person.name === newName)
+      console.log('Nimi:', person.name, 'newname', newName, 'ehto:', person.name === newName)
       if (person.name === newName) {
         inBook = true
       }
@@ -126,7 +125,7 @@ const App = () => {
     }
 
     if (allreadyInBook()) {
-      if (window.confirm(`${newObject.newName} is already in the phonebook, 
+      if (window.confirm(`${newName} is already in the phonebook, 
       do you wish to replace the old number?`)) {
         const idToChange = getIdForName(newName)
         const changedPerson = { ...(persons.find(n => n.name === newName)), number: newNumber }
@@ -137,14 +136,13 @@ const App = () => {
             setErrorMessage(`Number for ${newName} replaced`)
             setTimeout(() => {
               setErrorMessage(null)
-            }, 3000
-            )
+            }, 3000)
             setPersons(persons.map(p => p.id !== idToChange ? p : response.data))
           })
-          .catch( () => {
+          .catch(() => {
             setSuccess(false)
             setErrorMessage(`Information has been deleted from the server, can't update ${newName}`)
-            setPersons(persons.filter(p => (p.id !== idToChange) ))
+            setPersons(persons.filter(p => (p.id !== idToChange)))
             setTimeout(() => {
               setErrorMessage(null)
             }, 3000
@@ -165,6 +163,14 @@ const App = () => {
           setPersons(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
+        })
+        .catch(error => {
+          setSuccess(false)
+          console.log('error logi', error.response.data.error);
+          setErrorMessage(error.response.data.error)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 3000)
         })
     }
   }
