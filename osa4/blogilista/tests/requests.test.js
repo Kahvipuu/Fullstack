@@ -26,7 +26,6 @@ test('right amount of blogs returned', async () => {
 
 test('correct form of json', async () => {
     const response = await api.get('/api/blogs')
-    console.log('CORR FORM JSON', response.body);
     expect(response.body[0].id).toBeDefined()
 })
 
@@ -51,28 +50,44 @@ test('blog is added to database', async () => {
 
 })
 
-test('WIP initial default likes zero', async () => {
+test('initial default likes zero', async () => {
     let newBlog = new Blog({
         title: 'InitDefaulZeroLikes',
         author: 'AuthorString',
         url: 'UrlString'
     })
 
-    console.log('ZEEEEEEEEEEEEEZOOOOOOOOOOOOOO', newBlog)
-
     const postedBlog = await api
         .post('/api/blogs/')
         .send(newBlog)
         .expect(200)
 
-    console.log('POSTEDBLOG XXXXXX', postedBlog.body);
-    const id = postedBlog.body.id
-    console.log('ID TO FIND LLLLLLLLL', id);
-    newBlogResponse = await api.get(`/api/blogs/${id}`)
-    console.log('ZEEEEEEEEEEEEEZUUU', newBlogResponse.body);
-
+    newBlogResponse = await api.get(`/api/blogs/${postedBlog.body.id}`)
     expect(newBlogResponse.body.likes).toBe(0)
+})
 
+test('title missing is bad request', async ()=>{
+    let newBlog = new Blog({
+        author: 'titleMissing',
+        url: 'UrlString'
+    })
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+})
+
+test('url missing is bad request', async ()=>{
+    let newBlog = new Blog({
+        title: 'UrlMissing',
+        author: 'AuthorString',
+    })
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
 })
 
 afterAll(() => {

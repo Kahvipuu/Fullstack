@@ -8,4 +8,17 @@ Content-Type: application/json
 "likes": 0
 }
 
+### // blogs.js POST otettava ._doc pois request.body._doc... ja muuta id ennen lähetystä
+DELETE http://localhost:3003/api/blogs/603646e833d41f41a05aa889 HTTP/1.1
+Content-Type: application/json
 
+### // huomioi id
+PUT http://localhost:3003/api/blogs/603b734025f62411905a83d8 HTTP/1.1
+Content-Type: application/json
+
+{
+"title": "Topohanta",
+"author": "Gösta Knutsson",
+"url": "sensuroitu",
+"likes": 3
+}
