@@ -10,11 +10,15 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response) => {
     //jostain hyvästä syystä REST clientin request ilman ._doc ja muuten täytyy olla
     const body = request.body._doc
-
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(body.password, saltRounds)
+    console.log('MOLOLOLOLOLOLO USER POSt', body);
 
     if (body.username && body.password && body.name) {
+        if (body.password.length < 3) {
+            response.status(400).json({ error: 'password must be atleast 3 characters' })
+        }
+        const saltRounds = 10
+        const passwordHash = await bcrypt.hash(body.password, saltRounds)
+
         const user = new User({
             username: body.username,
             name: body.name,
@@ -23,9 +27,11 @@ usersRouter.post('/', async (request, response) => {
         const savedUser = await user.save()
         response.json(savedUser)
     } else {
-        response.status(400).end()
+        response.status(400).json({ error: 'username, name and password are all required' })
     }
 
 })
+
+// middleWare virheenkäsittely tuloillaan...
 
 module.exports = usersRouter
