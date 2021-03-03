@@ -50,7 +50,8 @@ blogsRouter.put('/:id', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     //jostain hyvästä syystä REST clientin request ilman ._doc ja muuten täytyy olla
     const body = request.body//._doc
-    const token = getTokenFrom(request)
+    const token = request.token
+    console.log();
     const verifiedToken = jwt.verify(token, config.SECRET) //unhandled promise rejection jos ei ole tokenia, korjataan jos on tehtävänä...
     if (!token || !verifiedToken.id) {
         return response.status(401).json({ error: 'token missing or invalid' })
