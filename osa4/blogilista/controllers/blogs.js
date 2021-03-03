@@ -1,6 +1,16 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const config = require('../utils/config')
+const jwt = require('jsonwebtoken')
+
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        return authorization.substring(7)
+    }
+    return null
+}
 
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { username: 1 })
@@ -39,9 +49,14 @@ blogsRouter.put('/:id', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
     //jostain hyvästä syystä REST clientin request ilman ._doc ja muuten täytyy olla
-    const body = request.body._doc
+    const body = request.body//._doc
+    const token = getTokenFrom(request)
+    const verifiedToken = jwt.verify(token, config.SECRET) //unhandled promise rejection jos ei ole tokenia, korjataan jos on tehtävänä...
+    if (!token || !verifiedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' })
+    }
     if (body.title && body.url) {
-        const user = await User.findOne({})
+        const user = await User.findById(verifiedToken.id)
         const likes = body.likes === undefined ? 0 : body.likes
         const blog = new Blog({
             title: body.title,
