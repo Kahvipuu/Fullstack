@@ -39,7 +39,7 @@ blogsRouter.put('/:id', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
     //jostain hyvästä syystä REST clientin request ilman ._doc ja muuten täytyy olla
-    const body = request.body//._doc
+    const body = request.body._doc
     if (body.title && body.url) {
         const user = await User.findOne({})
         const likes = body.likes === undefined ? 0 : body.likes

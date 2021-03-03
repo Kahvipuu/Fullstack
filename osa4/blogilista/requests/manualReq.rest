@@ -42,3 +42,12 @@ Content-Type: application/json
 "name": "Pekka",
 "password": "s"
 }
+
+### //Login
+post http://localhost:3003/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "Topo",
+    "password": "salasana"
+}
