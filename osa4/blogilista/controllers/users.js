@@ -3,13 +3,13 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.get('/', async (request, response) => {
-    const users = await User.find({})
+    const users = await User.find({}).populate('blogs')
     response.json(users.map(user => user.toJSON()))
 })
 
 usersRouter.post('/', async (request, response) => {
     //jostain hyvästä syystä REST clientin request ilman ._doc ja muuten täytyy olla
-    const body = request.body._doc
+    const body = request.body//._doc
     console.log('MOLOLOLOLOLOLO USER POSt', body);
 
     if (body.username && body.password && body.name) {
