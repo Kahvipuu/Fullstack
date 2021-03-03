@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ### // blogs.js POST otettava ._doc pois request.body._doc... ja muuta id ennen lähetystä
-DELETE http://localhost:3003/api/blogs/603f872947c8532464976307 HTTP/1.1
+DELETE http://localhost:3003/api/blogs/603fa4c3cfbccf0ea8d27aa0 HTTP/1.1
 Content-Type: application/json
 
 ### // huomioi id
@@ -63,3 +63,8 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvc
 "url": "https://www.adom.de/home/index.html",
 "likes": 1
 }
+
+### delete blog
+DELETE http://localhost:3003/api/blogs/603fa513cb8a4c1ff80d8f60 HTTP/1.1
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvcG8iLCJpZCI6IjYwM2Y4YzYxOGU3M2UzMmYwODc2NjdmYyIsImlhdCI6MTYxNDc4MTU0NX0.N-H351q9FHec5X2KAGWPlqa3Ri4jV-u0NiW0gzyKdzI

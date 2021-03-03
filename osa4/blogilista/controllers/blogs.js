@@ -4,6 +4,7 @@ const User = require('../models/user')
 const config = require('../utils/config')
 const jwt = require('jsonwebtoken')
 
+// ei enää käytössä
 const getTokenFrom = request => {
     const authorization = request.get('authorization')
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -29,8 +30,19 @@ blogsRouter.get('/:id', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-    await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
+    const token = request.token
+    const verifiedToken = jwt.verify(token, config.SECRET)
+    if (!token || !verifiedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    const blog = await Blog.findById(request.params.id)
+    if (verifiedToken.id === blog.user.toString()) {
+        await Blog.findByIdAndDelete(request.params.id)
+        response.status(204).end()
+    } else {
+        response.status(401).json({ error: 'user not matching blog creator' })
+    }
+
 })
 
 blogsRouter.put('/:id', async (request, response) => {
@@ -51,7 +63,6 @@ blogsRouter.post('/', async (request, response) => {
     //jostain hyvästä syystä REST clientin request ilman ._doc ja muuten täytyy olla
     const body = request.body//._doc
     const token = request.token
-    console.log();
     const verifiedToken = jwt.verify(token, config.SECRET) //unhandled promise rejection jos ei ole tokenia, korjataan jos on tehtävänä...
     if (!token || !verifiedToken.id) {
         return response.status(401).json({ error: 'token missing or invalid' })
@@ -76,5 +87,7 @@ blogsRouter.post('/', async (request, response) => {
     }
 
 })
+
+
 
 module.exports = blogsRouter
