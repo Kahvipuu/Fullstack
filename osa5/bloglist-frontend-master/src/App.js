@@ -2,13 +2,35 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
 
+const Notification = ({ message, success }) => {
+  if (message === null) {
+    return null
+  }
+  if (success) {
+    return (
+      <div className='success'>
+        {message}
+      </div>
+    )
+  } else {
+    return (
+      <div className='error'>
+        {message}
+      </div>
+    )
+  }
+}
+
+// lue uudestaan mitä oli nested html ongelmat!!
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [success, setSuccess] = useState(true)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -42,7 +64,13 @@ const App = () => {
       setPassword('')
       window.localStorage.setItem('loggedYouSir', JSON.stringify(user))
       blogService.setToken(user.token)
+      setSuccess(true)
+      setErrorMessage('Logged in successfully')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
     } catch (exception) {
+      setSuccess(false)
       setErrorMessage('wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
@@ -67,10 +95,16 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      setSuccess(true)
+      setErrorMessage('Blog added successfully')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
     } catch (e) {
+      setSuccess(false)
       setErrorMessage(e.errorMessage)
       setTimeout(() => {
-        setErrorMessage('')
+        setErrorMessage(null)
       }, 3000)
     }
   }
@@ -143,6 +177,7 @@ const App = () => {
   return (
     <div>
       <h1>Blog app</h1>
+      <Notification message={errorMessage} success={success} />
       { user === null ?
         loginForm() :
         <div>
