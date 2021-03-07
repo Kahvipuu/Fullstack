@@ -36,9 +36,11 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  // mielestäni käyttäjälle parempi jos järjestäminen tehdään alussa, eikä enää sen jälkeen
+  // muutoin voisi kutsua sortByLikes likettämisen yhteydessä.
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
     )
   }, [])
 
@@ -125,15 +127,21 @@ const App = () => {
       </form>
     </div>
   )
-
-  const blogsList = () => (
-    <div>
-      <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
-  )
+/*
+  const sortBlogsByLikes = () => {
+    setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+  }
+*/
+  const blogsList = () => {
+    return (
+      <div>
+        <h2>blogs</h2>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} setSuccess={setSuccess} setErrorMessage={setErrorMessage} />
+        )}
+      </div>
+    )
+  }
 
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
