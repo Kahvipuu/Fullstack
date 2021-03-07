@@ -13,7 +13,7 @@ const Blog = ({ blog, setSuccess, setErrorMessage, user, setBlogs, blogs }) => {
   }
   const showWhenVisible = visible ? blogStyle : { display: 'none' }
   const hideWhenVisible = visible ? { display: 'none' } : blogStyle
-  console.log('Blog user', user, 'ja blog', blog);
+  console.log('Blog user', user, 'ja blog', blog)
 
 
   const toggleVisibility = () => {

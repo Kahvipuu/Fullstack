@@ -61,7 +61,7 @@ const App = () => {
         username, password,
       })
       setUser(user)
-      console.log('user in HandleLogin', user); //token ok
+      console.log('user in HandleLogin', user) //token ok
       setUsername('')
       setPassword('')
       window.localStorage.setItem('loggedYouSir', JSON.stringify(user))
@@ -90,7 +90,7 @@ const App = () => {
   const createNewBlog = async (blogObject) => {
     try {
       const newBlog = await blogService.create(blogObject)
-      console.log('newBlog in hadleNewBlog', newBlog);
+      console.log('newBlog in hadleNewBlog', newBlog)
       setBlogs(blogs.concat(newBlog))
       blogFormRef.current.toggleVisibility()
       setSuccess(true)
@@ -113,13 +113,13 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           username
-        <input type='text' value={username} name='Username'
+          <input type='text' value={username} name='Username'
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
         <div>
           password
-        <input type='text' value={password} name='Password'
+          <input type='text' value={password} name='Password'
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
@@ -127,20 +127,20 @@ const App = () => {
       </form>
     </div>
   )
-/*
-  const sortBlogsByLikes = () => {
-    setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-  }
-*/
+  /*
+    const sortBlogsByLikes = () => {
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+    }
+  */
   const blogsList = () => {
     return (
       <div>
         <h2>blogs</h2>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} 
-          setSuccess={setSuccess} setErrorMessage={setErrorMessage} 
-          user={user} 
-          setBlogs={setBlogs} blogs={blogs} />
+          <Blog key={blog.id} blog={blog}
+            setSuccess={setSuccess} setErrorMessage={setErrorMessage}
+            user={user}
+            setBlogs={setBlogs} blogs={blogs} />
         )}
       </div>
     )
