@@ -137,7 +137,10 @@ const App = () => {
       <div>
         <h2>blogs</h2>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} setSuccess={setSuccess} setErrorMessage={setErrorMessage} />
+          <Blog key={blog.id} blog={blog} 
+          setSuccess={setSuccess} setErrorMessage={setErrorMessage} 
+          user={user} 
+          setBlogs={setBlogs} blogs={blogs} />
         )}
       </div>
     )

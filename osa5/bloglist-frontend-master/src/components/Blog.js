@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, setSuccess, setErrorMessage }) => {
+const Blog = ({ blog, setSuccess, setErrorMessage, user, setBlogs, blogs }) => {
   const [visible, setVisible] = useState(false)
   const [liked, setLiked] = useState(false)
   const blogStyle = {
@@ -13,6 +13,8 @@ const Blog = ({ blog, setSuccess, setErrorMessage }) => {
   }
   const showWhenVisible = visible ? blogStyle : { display: 'none' }
   const hideWhenVisible = visible ? { display: 'none' } : blogStyle
+  console.log('Blog user', user, 'ja blog', blog);
+
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -48,6 +50,25 @@ const Blog = ({ blog, setSuccess, setErrorMessage }) => {
     }
   }
 
+  const deleteBlog = async () => {
+    if (user.username === blog.user.username && window.confirm(`delete blog ${blog.title}`)) {
+      await blogService.remove(blog.id)
+      setSuccess(true)
+      setErrorMessage('Blog removed')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+    } else {
+      setSuccess(false)
+      setErrorMessage('Nothing to delete here')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
+
+    }
+  }
+
   return (
     <div>
       <div style={hideWhenVisible}>
@@ -63,6 +84,10 @@ const Blog = ({ blog, setSuccess, setErrorMessage }) => {
         <p>url: {blog.url}</p>
         <p>by user: {blog.user.username}</p>
         <button onClick={toggleVisibility}>hide</button>
+        {user.username === blog.user.username ? //username = unique
+          <button onClick={deleteBlog}>delete</button> :
+          null
+        }
       </div>
     </div>
 
