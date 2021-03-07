@@ -5,7 +5,7 @@ let token = null
 
 const setToken = newToken => {
   token = newToken
-  console.log('newToken in setToken', newToken);
+  console.log('newToken in setToken', newToken)
 }
 
 const getAll = () => {
@@ -14,7 +14,7 @@ const getAll = () => {
 }
 
 const create = newObject => {
-  console.log('Token in blogs.Create', token);
+  console.log('Token in blogs.Create', token)
   const config = {
     headers: { Authorization: token },
   }
