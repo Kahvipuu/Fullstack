@@ -55,13 +55,11 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log('logging in:', username, password)
     try {
       const user = await loginService.login({
         username, password,
       })
       setUser(user)
-      console.log('user in HandleLogin', user) //token ok
       setUsername('')
       setPassword('')
       window.localStorage.setItem('loggedYouSir', JSON.stringify(user))
@@ -90,7 +88,6 @@ const App = () => {
   const createNewBlog = async (blogObject) => {
     try {
       const newBlog = await blogService.create(blogObject)
-      console.log('newBlog in hadleNewBlog', newBlog)
       setBlogs(blogs.concat(newBlog))
       blogFormRef.current.toggleVisibility()
       setSuccess(true)
@@ -101,6 +98,33 @@ const App = () => {
     } catch (e) {
       setSuccess(false)
       setErrorMessage(e.errorMessage)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
+    }
+  }
+
+  const addLike = async (blog, liked, setLiked) => {
+    if (liked === false) {
+      try {
+        blog.likes += 1
+        await blogService.update(blog.id, blog)
+        setLiked(true)
+        setSuccess(true)
+        setErrorMessage('Blog liked')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
+      } catch (exception) {
+        setSuccess(false)
+        setErrorMessage('Nothing to see here')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
+      }
+    } else {
+      setSuccess(false)
+      setErrorMessage('You have already liked this blog')
       setTimeout(() => {
         setErrorMessage(null)
       }, 3000)
@@ -138,7 +162,7 @@ const App = () => {
         <h2>blogs</h2>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog}
-            setSuccess={setSuccess} setErrorMessage={setErrorMessage}
+            addLike={addLike}
             user={user}
             setBlogs={setBlogs} blogs={blogs} />
         )}
