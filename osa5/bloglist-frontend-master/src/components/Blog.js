@@ -45,19 +45,19 @@ const Blog = ({ blog, setSuccess, setErrorMessage, user, setBlogs, blogs, addLik
     <div>
       <div style={hideWhenVisible} className='hide'>
         {blog.title}
-        <button onClick={toggleVisibility}>view</button>
+        <button id='viewButton' onClick={toggleVisibility}>view</button>
       </div>
       <div style={showWhenVisible} className='show'>
         <p>{blog.title}</p>
         <p>author: {blog.author}</p>
         <p>likes: {blog.likes}
-          <button onClick={like}>like</button>
+          <button id='likeButton' onClick={like}>like</button>
         </p>
         <p>url: {blog.url}</p>
         <p>by user: {blog.user.username}</p>
-        <button onClick={toggleVisibility}>hide</button>
+        <button id='hideButton' onClick={toggleVisibility}>hide</button>
         {user.username === blog.user.username ? //username = unique
-          <button onClick={deleteBlog}>delete</button> :
+          <button id='deleteButton' onClick={deleteBlog}>delete</button> :
           null
         }
       </div>

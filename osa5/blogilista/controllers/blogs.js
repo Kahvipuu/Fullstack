@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 
 // ei enää käytössä... ja taas käytössä.. kopiointi osasta 4 osaan 5, toivottavasti ei hajonnut osasta 4 mitään välissä...
 const getTokenFrom = request => {
-    const authorization = request.get('authorization')
+    const authorization = request.get('Authorization')
     return authorization
     /*
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -66,8 +66,6 @@ blogsRouter.post('/', async (request, response) => {
     //jossain jotain outoa toiminnallisuutta.. osa5 front toimii suoraan req.bodyllä
     const body = request.body//._doc
     const token = getTokenFrom(request)
-    console.log('token in blogsRouter.post', token)
-    console.log('body in blogsRouter.post', body)
     const verifiedToken = jwt.verify(token, config.SECRET) //unhandled promise rejection jos ei ole tokenia, korjataan jos on tehtävänä...
     if (!token || !verifiedToken.id) {
         return response.status(401).json({ error: 'token missing or invalid' })
