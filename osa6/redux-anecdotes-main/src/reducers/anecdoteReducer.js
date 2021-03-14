@@ -1,3 +1,5 @@
+import anecdoteService from '../services/anecdotes'
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -26,13 +28,8 @@ const anecdoteReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'VOTE':
       const id = action.data.id
-      const annecdoteToVote = state.find(a => a.id === id)
-      const newVotes = annecdoteToVote.votes + 1
-      const votedAnecdote = {
-        ...annecdoteToVote, votes: newVotes
-      }
       return state.map(a =>
-        a.id !== id ? a : votedAnecdote
+        a.id !== id ? a : action.data
       ).sort((a, b) => b.votes - a.votes)
     case 'CREATE_NEW':
       return [...state, action.data]
@@ -43,29 +40,37 @@ const anecdoteReducer = (state = initialState, action) => {
   }
 }
 
-export const voteAnecdote = (id) => {
-  console.log('haloo')
-  const voteA = {
-    type: 'VOTE',
-    data: { id }
+export const voteAnecdote = (anecdote) => {
+  return async dispatch => {
+    const newVotes = anecdote.votes + 1
+    const votedAnecdote = {
+      ...anecdote, votes: newVotes
+    }
+    const updatedAnecdote = await anecdoteService.updateAnecdote(votedAnecdote)
+    dispatch({
+      type: 'VOTE',
+      data: updatedAnecdote
+    })
   }
-  console.log(voteA)
-  return voteA
 }
 
-export const createNewAnecdote = (data) => {
-  const newAnec = {
-    type: 'CREATE_NEW',
-    data
+export const createNewAnecdote = (content) => {
+  return async dispatch => {
+    const newAnec = await anecdoteService.createNew(content)
+    dispatch({
+      type: 'CREATE_NEW',
+      data: newAnec
+    })
   }
-  console.log('newAnecdote', newAnec)
-  return newAnec
 }
 
-export const initializeAnecdotes = (anecdotes) => {
-  return {
-    type: 'INIT_ANECDOTES',
-    data: anecdotes
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({
+      type: 'INIT_ANECDOTES',
+      data: anecdotes.sort((a, b) => b.votes - a.votes)
+    })
   }
 }
 
