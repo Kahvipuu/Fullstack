@@ -1,5 +1,5 @@
-
 const initialState = 'alkuarvo testaukseen'
+let timeoutId
 
 const notificationReducer = (state = initialState, action) => {
   console.log('Notif-State', state)
@@ -28,8 +28,9 @@ export const removeNotification = () => {
 
 export const setTimedNotification = (notification, time) => {
   return async dispatch => {
+    clearTimeout(timeoutId)
     dispatch(changeNotification(notification))
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       dispatch(removeNotification())
     }, time * 1000)
   }
