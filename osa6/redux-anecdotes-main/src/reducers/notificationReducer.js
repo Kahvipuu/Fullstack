@@ -2,6 +2,8 @@
 const initialState = 'alkuarvo testaukseen'
 
 const notificationReducer = (state = initialState, action) => {
+  console.log('Notif-State', state)
+  console.log('Notif-action', action)
   switch (action.type) {
     case 'CHANGE':
       return action.data
@@ -21,7 +23,16 @@ export const changeNotification = (notification) => {
 }
 
 export const removeNotification = () => {
-  return {type: 'REMOVE'}
+  return { type: 'REMOVE' }
+}
+
+export const setTimedNotification = (notification, time) => {
+  return async dispatch => {
+    dispatch(changeNotification(notification))
+    setTimeout(() => {
+      dispatch(removeNotification())
+    }, time * 1000)
+  }
 }
 
 export default notificationReducer
