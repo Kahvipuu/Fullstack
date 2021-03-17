@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Switch, Route, Link, useParams, useHistory, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, Link, useHistory, useRouteMatch } from 'react-router-dom'
+import { useField } from './hooks'
 
 const Menu = ({ notification }) => {
   const padding = {
@@ -31,16 +32,18 @@ const AnecdoteList = ({ anecdotes }) => (
   </div>
 )
 
-// Anecdote app for <a href='https://courses.helsinki.fi/fi/tkt21009'>Full Stack -websovelluskehitys</a>.
-
-const AnecdoteSingle = ({ anecdote }) => (
-  <div>
-    <h2>{anecdote.content} by {anecdote.author} </h2>
-    <div>has {anecdote.votes} votes</div>
-    <div>for more info see <a href={`${anecdote.info}`} >{anecdote.info}</a>
+//täytyisi lisätä anecdoten luomiseen http:// lisäys palikka
+const AnecdoteSingle = ({ anecdote }) => {
+  console.log('anecdoteSingle', anecdote)
+  return (
+    <div>
+      <h2>{anecdote.content} by {anecdote.author} </h2>
+      <div>has {anecdote.votes} votes</div>
+      <div>for more info see <a href={`${anecdote.info}`} >{anecdote.info}</a>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 const About = () => (
   <div>
@@ -65,40 +68,48 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const anecdote = useField('text', 'content')
+  const author = useField('text', 'author')
+  const info = useField('text', 'info')
   const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: anecdote.input.value,
+      author: author.input.value,
+      info: info.input.value,
       votes: 0
     })
-    props.giveNotification(`a new anecdote ${content} created!`)
+    props.giveNotification(`a new anecdote ${anecdote.input.value} created!`)
     history.push('/')
+  }
+
+  const handleReset = (e) => {
+    e.preventDefault()
+    anecdote.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onReset={handleReset}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...anecdote.input} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author.input} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input {...info.input} />
         </div>
-        <button>create</button>
+        <button type='submit' >create</button>
+        <button type='reset'>reset</button>
       </form>
     </div>
   )
