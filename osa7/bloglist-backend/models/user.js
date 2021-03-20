@@ -19,6 +19,8 @@ const userSchema = mongoose.Schema({
 
 userSchema.plugin(uniqueValidator)
 
+
+// pw hash näkyi jossakin, miksi? (joku console.log user siis)
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
@@ -27,5 +29,7 @@ userSchema.set('toJSON', {
         delete returnedObject.passwordHash
     }
 })
+
+
 
 module.exports = mongoose.model('User', userSchema)

@@ -10,16 +10,16 @@ import BlogForm from './components/blogForm'
 import Notification from './components/Notification'
 import { notificationFail, notificationSuccess } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogsReducer'
-
+import { userLogin, userLogout } from './reducers/userReducer'
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.loggedInUser)
 
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
-  const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -28,23 +28,23 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedYouSir')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      const loggedInUser = JSON.parse(loggedUserJSON)
+      dispatch(userLogin(loggedInUser))
+      blogService.setToken(loggedInUser.token)
     }
   }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
+      const userToLogin = await loginService.login({
         username, password,
       })
-      setUser(user)
+      dispatch(userLogin(userToLogin))
       setUsername('')
       setPassword('')
-      window.localStorage.setItem('loggedYouSir', JSON.stringify(user))
-      blogService.setToken(user.token)
+      window.localStorage.setItem('loggedYouSir', JSON.stringify(userToLogin))
+      blogService.setToken(userToLogin.token)
       dispatch(notificationSuccess('Logged in successfully'))
     } catch (exception) {
       dispatch(notificationFail('wrong credentials'))
@@ -53,7 +53,8 @@ const App = () => {
 
   const handleLogout = (event) => {
     event.preventDefault()
-    setUser(null)
+
+    dispatch(userLogout())
     window.localStorage.removeItem('loggedYouSir')
   }
 
@@ -127,6 +128,7 @@ const App = () => {
     <div>
       <h1>Blog app</h1>
       <Notification />
+      {console.log('user in return', user)}
       {user === null ?
         loginForm() :
         <div>

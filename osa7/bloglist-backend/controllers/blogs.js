@@ -28,7 +28,6 @@ blogsRouter.get('/:id', async (request, response) => {
     } else {
         response.status(404).end()
     }
-
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
