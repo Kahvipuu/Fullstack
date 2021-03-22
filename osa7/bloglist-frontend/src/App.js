@@ -10,14 +10,20 @@ import BlogForm from './components/blogForm'
 import Notification from './components/Notification'
 import { notificationFail, notificationSuccess } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogsReducer'
+import { initializeUsers } from './reducers/allUsersReducer'
 import { userLogin, userLogout } from './reducers/userReducer'
+import UserList from './components/UserList'
+
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.loggedInUser)
+  const allUsers = useSelector(state => state.allUsers)
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
+    console.log('useEffect', allUsers)
   }, [dispatch])
 
   const [username, setUsername] = useState('')
@@ -32,7 +38,7 @@ const App = () => {
       dispatch(userLogin(loggedInUser))
       blogService.setToken(loggedInUser.token)
     }
-  }, [])
+  }, [dispatch])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -102,7 +108,6 @@ const App = () => {
           <Blog key={blog.id}
             blog={blog}
             user={user}
-            blogs={blogs}
             addLike={addLike}
           />
         )}
@@ -127,8 +132,9 @@ const App = () => {
   return (
     <div>
       <h1>Blog app</h1>
+      <UserList users={allUsers} />
       <Notification />
-      {console.log('user in return', user)}
+      {console.log('user in app return', user)}
       {user === null ?
         loginForm() :
         <div>
