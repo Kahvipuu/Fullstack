@@ -18,14 +18,22 @@ const UserList = ({ users }) => {
   return (
     <div>
       { users.length === 0 ? 'loading users' :
-        users.map(user =>
-          <User key={user.id}
-            user={user}
-          />
-        )}
+        mapUsers(users)}
     </div>
   )
+}
 
+const mapUsers = (users) => {
+  return (
+    <div>
+      <h1>Users</h1>
+      {users.map(user =>
+        <User key={user.id}
+          user={user}
+        />
+      )}
+    </div>
+  )
 }
 
 const User = ({ user }) => {

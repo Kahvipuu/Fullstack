@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Switch, Route, Link, useHistory, useRouteMatch } from 'react-router-dom'
 
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -14,6 +15,19 @@ import { initializeUsers } from './reducers/allUsersReducer'
 import { userLogin, userLogout } from './reducers/userReducer'
 import UserList from './components/UserList'
 
+const Menu = ({ username, logout }) => {
+  const padding = {
+    paddingRight: 5
+  }
+  return (
+    <div>
+      <Link style={padding} to='/'>blogs</Link>
+      <Link style={padding} to='/usersList'>users</Link>
+      {username} logged in {logout()}
+    </div>
+  )
+}
+
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
@@ -22,9 +36,13 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
+  }, [dispatch])
+
+  // jokseenkin raskas ratkaisu, tappeluun meni liikaa aikaa joten nyt näin
+  useEffect(() => {
     dispatch(initializeUsers())
     console.log('useEffect', allUsers)
-  }, [dispatch])
+  }, [blogs])
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -104,6 +122,7 @@ const App = () => {
     return (
       <div>
         <h2>blogs</h2>
+        {blogForm()}
         {blogs.map(blog =>
           <Blog key={blog.id}
             blog={blog}
@@ -122,26 +141,25 @@ const App = () => {
   )
 
   const logout = () => (
-    <div>
-      <form onSubmit={handleLogout}>
-        <button type='submit'>logout</button>
-      </form>
-    </div>
+    <button type='button' onClick={handleLogout} >logout</button>
   )
 
   return (
     <div>
-      <h1>Blog app</h1>
-      <UserList users={allUsers} />
-      <Notification />
-      {console.log('user in app return', user)}
       {user === null ?
         loginForm() :
         <div>
-          <p>{user.username} logged in</p>
-          {logout()}
-          {blogForm()}
-          {blogsList()}
+          <Menu username={user.username} logout={() => logout()} />
+          <h1>Blog app</h1>
+          <Notification />
+          <Switch>
+            <Route path='/usersList'>
+              <UserList users={allUsers} />
+            </Route>
+            <Route path='/'>
+              {blogsList()}
+            </Route>
+          </Switch>
         </div>
       }
     </div>
