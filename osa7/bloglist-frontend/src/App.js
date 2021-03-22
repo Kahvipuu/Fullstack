@@ -14,6 +14,7 @@ import { initializeBlogs } from './reducers/blogsReducer'
 import { initializeUsers } from './reducers/allUsersReducer'
 import { userLogin, userLogout } from './reducers/userReducer'
 import UserList from './components/UserList'
+import User from './components/User'
 
 const Menu = ({ username, logout }) => {
   const padding = {
@@ -144,6 +145,14 @@ const App = () => {
     <button type='button' onClick={handleLogout} >logout</button>
   )
 
+  const userById = (id) =>
+    allUsers.find(a => a.id === id)
+
+  const match = useRouteMatch('/users/:id')
+  const matchedUser = match
+    ? userById(match.params.id)
+    : null
+
   return (
     <div>
       {user === null ?
@@ -153,6 +162,9 @@ const App = () => {
           <h1>Blog app</h1>
           <Notification />
           <Switch>
+            <Route path='/users/:id' >
+              <User user={matchedUser} />
+            </Route>
             <Route path='/usersList'>
               <UserList users={allUsers} />
             </Route>

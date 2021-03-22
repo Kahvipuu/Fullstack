@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import userService from '../services/login'
 
 /*
@@ -40,7 +41,12 @@ const User = ({ user }) => {
   console.log('user in User', user)
   return (
     <div>
-      {user.username} blogs created {user.blogs.length}
+      <Link to={`/users/${user.id}`}>
+        {user.username}
+      </Link>
+      <p>
+        blogs created {user.blogs.length}
+      </p>
     </div>
   )
 }
