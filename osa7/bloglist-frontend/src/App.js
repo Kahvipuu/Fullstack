@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Switch, Route, Link, useHistory, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
+import { AppBar, Button, Toolbar, MenuItem, Container } from '@material-ui/core'
 
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -21,11 +22,18 @@ const Menu = ({ username, logout }) => {
     paddingRight: 5
   }
   return (
-    <div>
-      <Link style={padding} to='/'>blogs</Link>
-      <Link style={padding} to='/usersList'>users</Link>
-      {username} logged in {logout()}
-    </div>
+    <AppBar position='sticky' color='primary'>
+      <Toolbar>
+        <Button color='secondary' component={Link} to='/' >
+          blogs
+        </Button>
+        <Button color='secondary' component={Link} to='/usersList' >
+          users
+        </Button>
+        <MenuItem>{username} logged in</MenuItem>
+        {logout()}
+      </Toolbar>
+    </AppBar>
   )
 }
 
@@ -142,7 +150,7 @@ const App = () => {
   )
 
   const logout = () => (
-    <button type='button' onClick={handleLogout} >logout</button>
+    <Button type='button' onClick={handleLogout} >logout</Button>
   )
 
   const userById = (id) =>
@@ -154,7 +162,7 @@ const App = () => {
     : null
 
   return (
-    <div>
+    <Container>
       {user === null ?
         loginForm() :
         <div>
@@ -174,7 +182,7 @@ const App = () => {
           </Switch>
         </div>
       }
-    </div>
+    </Container>
   )
 
 }

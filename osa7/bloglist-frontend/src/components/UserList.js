@@ -1,3 +1,4 @@
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import userService from '../services/login'
@@ -27,12 +28,26 @@ const UserList = ({ users }) => {
 const mapUsers = (users) => {
   return (
     <div>
-      <h1>Users</h1>
-      {users.map(user =>
-        <User key={user.id}
-          user={user}
-        />
-      )}
+      <h3>Users</h3>
+      <TableContainer component={Paper} >
+        <Table>
+          <TableHead>
+            <TableCell>
+              Name
+            </TableCell>
+            <TableCell>
+              Blogs created
+            </TableCell>
+          </TableHead>
+          <TableBody>
+            {users.map(user =>
+              <User key={user.id}
+                user={user}
+              />
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
@@ -40,14 +55,16 @@ const mapUsers = (users) => {
 const User = ({ user }) => {
   console.log('user in User', user)
   return (
-    <div>
-      <Link to={`/users/${user.id}`}>
-        {user.username}
-      </Link>
-      <p>
-        blogs created {user.blogs.length}
-      </p>
-    </div>
+    <TableRow>
+      <TableCell>
+        <Link to={`/users/${user.id}`}>
+          {user.username}
+        </Link>
+      </TableCell>
+      <TableCell>
+        {user.blogs.length}
+      </TableCell>
+    </TableRow>
   )
 }
 
