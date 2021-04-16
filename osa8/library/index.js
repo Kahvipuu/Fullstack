@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server')
+const { v1: uuid } = require('uuid')
 
 let authors = [
   {
@@ -106,6 +107,21 @@ const typeDefs = gql`
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
+
+  type Mutation {
+    addBook(
+      title: String!
+      published: Int!
+      author: String!
+      genres: [String!]!
+    ): Book
+
+    addAuthor(
+      name: String!
+      born: Int
+      bookCount: Int
+    ): Author
+  }
 `
 
 const resolvers = {
@@ -127,7 +143,7 @@ const resolvers = {
           return true
         }
         return book.genres.includes(args.genre)
-      }   
+      }
       return books.filter(byAuthor).filter(byGenre)
     },
     allAuthors: () => authors
@@ -138,6 +154,25 @@ const resolvers = {
         return root.name === book.author
       }
       return books.filter(byAuthor).length
+    }
+  },
+  Mutation: {
+    addAuthor: (root, args) => {
+      const author = { ...args, id: uuid() }
+      authors = authors.concat(author)
+      return author
+    },
+    addBook: (root, args) => {
+      const byName = (author) => {
+        return args.author === author.name
+      }
+      if (authors.filter(byName).length === 0) {
+        const author = { name: args.author, id: uuid() }
+        authors = authors.concat(author)
+      }
+      const book = { ...args, id: uuid() }
+      books = books.concat(book)
+      return book
     }
   }
 }
@@ -150,3 +185,14 @@ const server = new ApolloServer({
 server.listen().then(({ url }) => {
   console.log(`Server ready at ${url}`)
 })
+
+/*
+mutation {
+  addAuthor(
+    name: "Reijo Mäki"
+  ) {
+    name,
+    id
+  }
+}
+*/
