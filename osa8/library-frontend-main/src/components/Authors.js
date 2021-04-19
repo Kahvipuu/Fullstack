@@ -1,5 +1,6 @@
 import { gql, useMutation } from '@apollo/client'
 import React, { useState } from 'react'
+import Select from 'react-select'
 
 const UPDATE_AUTHOR = gql`
   mutation updateAuthor($name: String!, $born: Int!){
@@ -15,7 +16,7 @@ const UPDATE_AUTHOR = gql`
 `
 
 const Authors = (props) => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState(null)
   const [born, setBorn] = useState('')
 
   const [updateAuthor] = useMutation(UPDATE_AUTHOR)
@@ -23,12 +24,17 @@ const Authors = (props) => {
   if (!props.show) {
     return null
   }
-  const authors = props.authors
+  /*
+  authors.map(a => {
+                  return [{ value: a.name, label: a.name }]
+                })
+  */
 
+  const authors = props.authors
   const submit = async (event) => {
     event.preventDefault()
 
-    updateAuthor({ variables: { name, born: Number(born) } })
+    updateAuthor({ variables: { name: name.value, born: Number(born) } })
 
     setName('')
     setBorn('')
@@ -62,13 +68,18 @@ const Authors = (props) => {
         <form onSubmit={submit}>
           <div>
             name
-            <input value={name} onChange={({ target }) => setName(target.value)}>
-            </input>
+            <Select defaultValue={name}
+              onChange={setName}
+              options={authors.map(a =>
+                ({ value: a.name, label: a.name })
+              )}
+            >
+            </Select>
           </div>
           <div>
             born
-            <input type={'number'} value={born} onChange={({ target }) => setBorn(target.value)}>
-            </input>
+            <input type={'number'} value={born}
+              onChange={({ target }) => setBorn(target.value)} />
           </div>
           <button type='submit'>update</button>
         </form>
