@@ -11,11 +11,13 @@ query {
     name,
     born,
     bookCount
+    id
   }
   allBooks {
     title,
     author,
     published
+    id
   }
 }`
 
