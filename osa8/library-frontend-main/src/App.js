@@ -12,6 +12,11 @@ query {
     born, 
     bookCount
   }
+  allBooks {
+    title,
+    author,
+    published
+  }
 }`
 
 const App = () => {
@@ -35,7 +40,7 @@ const App = () => {
       />
 
       <Books
-        show={page === 'books'}
+        show={page === 'books'} books={result.data.allBooks}
       />
 
       <NewBook
