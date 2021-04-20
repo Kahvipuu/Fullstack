@@ -1,4 +1,4 @@
-const { ApolloServer, gql, UserInputError } = require('apollo-server')
+const { ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server')
 const mongoose = require('mongoose')
 const Author = require('./models/author')
 const Book = require('./models/book')
@@ -92,7 +92,7 @@ const resolvers = {
     allBooks: async (root, args) => {
       console.log("args in allBooks query---------", args)
       if (!args.author && !args.genre) {
-        return Book.find({})
+        return Book.find({}).populate('author')
       }
       const byAuthor = (book) => {
         if (!args.author) {

@@ -8,16 +8,16 @@ import { gql, useQuery } from '@apollo/client'
 const ALL_AUTHORS_AND_BOOKS = gql`
 query {
   allAuthors {
-    name,
-    born,
+    name
+    born
     bookCount
     id
   }
   allBooks {
-    title,
-    author,
+    title
     published
     id
+    author{name, id}
   }
 }`
 
