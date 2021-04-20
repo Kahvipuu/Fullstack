@@ -90,6 +90,7 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
+      console.log("allBooks ARGS------", args)
       if (!args.author && !args.genre) {
         return Book.find({}).populate('author')
       }
@@ -127,6 +128,8 @@ const resolvers = {
       }
     },
     addBook: async (root, args, { currentUser }) => {
+      console.log("addBook ARGS", args)
+      console.log("addBook current user", currentUser)
       if (!currentUser) {
         throw new AuthenticationError("not authenticated")
       }

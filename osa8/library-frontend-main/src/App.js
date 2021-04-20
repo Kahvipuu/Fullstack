@@ -5,6 +5,7 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
+import Recommend from './components/Recommend'
 
 const ALL_AUTHORS_AND_BOOKS = gql`
 query {
@@ -18,6 +19,7 @@ query {
     title
     published
     id
+    genres
     author{name, id}
   }
 }`
@@ -28,7 +30,6 @@ const App = () => {
   const client = useApolloClient()
 
   const allAuthorsAndBooksResult = useQuery(ALL_AUTHORS_AND_BOOKS)
-
   const logout = () => {
     setToken(null)
     localStorage.clear()
@@ -38,6 +39,7 @@ const App = () => {
   if (allAuthorsAndBooksResult.loading) {
     return <div>loading...</div>
   }
+  console.log("all Auth And Books", allAuthorsAndBooksResult)
 
   if (!token) {
     return (
@@ -54,6 +56,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('recommend')}>recommend</button>
         <button onClick={() => logout()}>logout</button>
       </div>
 
@@ -67,6 +70,10 @@ const App = () => {
 
       <NewBook
         show={page === 'add'} allBooksQuery={ALL_AUTHORS_AND_BOOKS}
+      />
+
+      <Recommend
+        show={page === 'recommend'}
       />
 
     </div>

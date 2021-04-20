@@ -1,13 +1,29 @@
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 const Books = (props) => {
+  const [genre, setGenre] = useState(null)
+  const [books, setBooks] = useState(props.books)
+  const allBooks = props.books
+
+  useEffect(() => {
+    if (genre) {
+      setBooks(allBooks.filter(b => b.genres.includes(genre)))
+    } else {
+      setBooks(allBooks)
+    }
+  }, [genre]) // eslint-disable-line
+
+  console.log("props in Books", props)
   if (!props.show) {
     return null
   }
 
-  const books = props.books
-
+  const mapGenres = props.books.flatMap(b => b.genres)
+  console.log("genres in Books", mapGenres)
+  const genres = [...new Set(mapGenres)]
+  console.log(genres)
+  console.log("chosen genre in Books", genre)
   return (
     <div>
       <h2>books</h2>
@@ -32,6 +48,24 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
+      <div>
+        <table>
+          <tbody>
+            {genres.map(g =>
+              <tr key={g}>
+                <td>
+                  <button onClick={() => setGenre(g)}>{g}</button>
+                </td>
+              </tr>
+            )}
+            <tr>
+              <td>
+                <button onClick={() => setGenre(null)}>all Genres</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
