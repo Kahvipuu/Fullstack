@@ -95,17 +95,29 @@ const resolvers = {
   Mutation: {
     addAuthor: (root, args) => {
       const author = new Author({ ...args })
-      return author.save()
+      try {
+        return author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args })
+      }
     },
     addBook: async (root, args) => {
       let author = await Author.findOne({ name: args.author })
 
       if (!author) {
         author = new Author({ name: args.author })
-        await author.save()
+        try {
+          return author.save()
+        } catch (error) {
+          throw new UserInputError(error.message, { invalidArgs: args })
+        }
       }
       const book = new Book({ ...args, author })
-      return book.save()
+      try {
+        return book.save()
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args })
+      }
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name })
