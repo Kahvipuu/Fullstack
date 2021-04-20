@@ -65,7 +65,7 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allBooks: (root, args) => {
+    allBooks: async (root, args) => {
       if (!args.author && !args.genre) {
         return Book.find({})
       }
@@ -73,7 +73,7 @@ const resolvers = {
         if (!args.author) {
           return true
         }
-        return args.author === book.author
+        return args.author === book.author //??
       }
       const byGenre = (book) => {
         if (!args.genre) {
@@ -81,16 +81,15 @@ const resolvers = {
         }
         return book.genres.includes(args.genre)
       }
-      return Book.find({}).filter(byAuthor).filter(byGenre)
+      const allBooks = await Book.find({})
+      return allBooks.filter(byAuthor).filter(byGenre)
     },
     allAuthors: () => Author.find({})
   },
   Author: {
-    bookCount: (root) => {
-      const byAuthor = (book) => {
-        return root.name === book.author
-      }
-      return Book.find({}).filter(byAuthor).length
+    bookCount: async (root) => {
+      const allBooks = await Book.find({ author: root._id })
+      return allBooks.length
     }
   },
   Mutation: {
@@ -99,7 +98,7 @@ const resolvers = {
       return author.save()
     },
     addBook: async (root, args) => {
-      let author = await Author.findOne({name: args.author}) 
+      let author = await Author.findOne({ name: args.author })
 
       if (!author) {
         author = new Author({ name: args.author })
@@ -109,7 +108,7 @@ const resolvers = {
       return book.save()
     },
     editAuthor: async (root, args) => {
-      const author = await Author.findOne({name: args.name})
+      const author = await Author.findOne({ name: args.name })
       if (!author) {
         return null
       }
@@ -123,9 +122,8 @@ const resolvers = {
         newBorn = args.setBornTo
       }
       const updatedAuthor = { name: authorName, born: newBorn, id: author.id }
-      
-//      authors = authors.map(a => a.name === args.name ? updatedAuthor : a)
-      return Author.findOneAndUpdate({name: args.name}, updatedAuthor) 
+
+      return Author.findOneAndUpdate({ name: args.name }, updatedAuthor, { new: true })
     }
   }
 }
