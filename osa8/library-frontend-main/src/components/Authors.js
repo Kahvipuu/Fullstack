@@ -36,7 +36,6 @@ const Authors = (props) => {
 
     updateAuthor({ variables: { name: name.value, born: Number(born) } })
 
-    setName('')
     setBorn('')
   }
 
