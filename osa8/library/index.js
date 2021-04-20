@@ -137,12 +137,13 @@ const resolvers = {
       if (!author) {
         author = new Author({ name: args.author })
         try {
-          return author.save()
+          author.save()
         } catch (error) {
           throw new UserInputError(error.message, { invalidArgs: args })
         }
       }
       const book = new Book({ ...args, author })
+      console.log("Book in AddBook---", book)
       try {
         return book.save()
       } catch (error) {

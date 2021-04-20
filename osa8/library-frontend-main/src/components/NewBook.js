@@ -10,7 +10,7 @@ const CREATE_BOOK = gql`
       genres: $genres
     ){
       title
-      author
+      author{name}
       published
     }
   }
@@ -18,7 +18,7 @@ const CREATE_BOOK = gql`
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
-  const [author, setAuhtor] = useState('')
+  const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
@@ -38,7 +38,7 @@ const NewBook = (props) => {
 
     setTitle('')
     setPublished('')
-    setAuhtor('')
+    setAuthor('')
     setGenres([])
     setGenre('')
   }
@@ -55,14 +55,17 @@ const NewBook = (props) => {
           title
           <input
             value={title}
-            onChange={({ target }) => setTitle(target.value)}
+            onChange={({ target }) => {
+              setTitle(target.value)
+            }
+            }
           />
         </div>
         <div>
           author
           <input
             value={author}
-            onChange={({ target }) => setAuhtor(target.value)}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>

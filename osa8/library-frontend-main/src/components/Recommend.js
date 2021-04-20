@@ -20,10 +20,10 @@ const FAVORITE_GENRE = gql`
 `
 
 const Recommend = (props) => {
-  const [getBooks, booksResult] = useLazyQuery(FAVORITE_GENRE)
+  const [getBooks, booksResult] = useLazyQuery(FAVORITE_GENRE, {nextFetchPolicy: 'network-only'})
   const meResult = useQuery(ME, {
     onCompleted: d => {
-      getBooks({ variables: { genre: d.me.favoriteGenre } })  
+      getBooks({ variables: { genre: d.me.favoriteGenre } })
     }
   })
 
@@ -32,7 +32,7 @@ const Recommend = (props) => {
   }
   if (meResult.loading) {
     return <div>loading...</div>
-  } 
+  }
 
   console.log("meResult", meResult)
   console.log("favGenre meResult", meResult.data.me.favoriteGenre)
